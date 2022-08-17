@@ -376,6 +376,8 @@ spec:
       params:
         - name: ibmcloud-api
           value: $(params.ibmcloud-api)
+        - name: region
+          value: $(params.region)
         - name: resource-group
           value: $(params.resource-group)
         - name: pipeline-debug
