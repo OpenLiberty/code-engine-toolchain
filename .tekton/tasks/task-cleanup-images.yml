@@ -1,0 +1,69 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: cleanup-images
+spec:
+  params:
+    - name: ibmcloud-api
+      description: the ibmcloud api
+      default: https://cloud.ibm.com
+    - name: continuous-delivery-context-secret
+      description: name of the configmap containing the continuous delivery pipeline context secrets
+      default: secure-properties
+    - name: toolchain-apikey-secret-key
+      description: field in the secret that contains the api key used to access toolchain and DOI instance
+      default: "toolchain-apikey"
+    - name: resource-group
+      description: target resource group (name or id) for the ibmcloud login operation
+    - name: pipeline-debug
+      description: Pipeline debug mode
+      default: "0"
+    - name: task-image
+      description: image used to execute this task
+      default: "icr.io/continuous-delivery/pipeline/pipeline-base-ubi:3.2"
+    - name: registry-namespace
+      description: container registry namespace
+    - name: registry-region
+      description: The IBM Cloud region for image registry
+  steps:
+    - name: cleanup-images
+      image: $(params.task-image)
+      env:
+        - name: PIPELINE_ID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/pipeline-id']
+        - name: IBM_CLOUD_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: $(params.continuous-delivery-context-secret)
+              key: $(params.toolchain-apikey-secret-key)
+      script: |
+        #!/bin/bash
+        set -e -o pipefail
+
+        if [ $(params.pipeline-debug) == 1 ]; then
+            env
+            pwd
+            trap env EXIT
+            set -x
+        fi
+
+        # SETUP BEGIN
+        ibmcloud config --check-version false
+        # The Dallas (us-south) region is targeted by default
+        # since all the images reside in the us-south, login to the default region
+        if [ "$(params.registry-region)" ]; then
+          # if region is in the 'ibm:yp:<region>' format just keep the region part
+          IBM_CLOUD_REGION=$(echo "$(params.registry-region)" | awk -F ':' '{print $NF;}')
+        else
+          IBM_CLOUD_REGION="us-south"
+        fi
+
+        ibmcloud login -a $(params.ibmcloud-api) -r $IBM_CLOUD_REGION --apikey $IBM_CLOUD_API_KEY
+
+        ibmcloud target -g "$(params.resource-group)"
+
+        # clean up untagged images from libertyio namespace
+        echo "Deleting untagged images from namespace $(params.registry-namespace)"
+        ibmcloud cr image-prune-untagged --force --restrict "$(params.registry-namespace)"
