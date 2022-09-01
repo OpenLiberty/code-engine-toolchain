@@ -63,10 +63,10 @@ spec:
       default: "0.4G"
     - name: cpu
       description: number of vCPU of the Code Engine application
-      default: "0.5"
+      default: "0.125"
     - name: memory
       description: total memory of the Code Engine application
-      default: "1G"
+      default: "0.25G"
     - name: min-scale
       description: minimum scale of the Code Engine application
       default: "1"
