@@ -387,7 +387,7 @@ spec:
     - name: post-to-slack
       taskRef:
         name: slack-post-message
-      runAfter: [deploy-application]
+      runAfter: [check-application-health]
       params:
         - name: message
           value: $(tasks.deploy-application.results.app-url)
