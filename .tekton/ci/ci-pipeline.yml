@@ -16,6 +16,12 @@ spec:
     - name: revision
       description: the git revision/commit for the git repo
       default: ""
+    - name: commit-url
+      description: URL to the commit
+      default: ""
+    - name: commit-message
+      description: the commit message
+      default: ""
     - name: fail-on-lint-errors
       description: force failure of task when docker lint errors are found
       default: "true"
@@ -390,7 +396,7 @@ spec:
       runAfter: [check-application-health]
       params:
         - name: message
-          value: "$(tasks.deploy-application.results.app-url) updated with $(tasks.git-clone.results.git-repository)/commit/$(tasks.git-clone.results.git-commit)"
+          value: "$(tasks.deploy-application.results.app-url) updated with $(params.commit-message) $(params.commit-url)"
       workspaces:
         - name: workspace
           workspace: pipeline-ws
