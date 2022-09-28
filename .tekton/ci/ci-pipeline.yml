@@ -390,7 +390,7 @@ spec:
       runAfter: [check-application-health]
       params:
         - name: message
-          value: $(tasks.deploy-application.results.app-url)
+          value: "$(tasks.deploy-application.results.app-url) updated with $(tasks.git-clone.results.git-repository)/commit/$(tasks.git-clone.results.git-commit)"
       workspaces:
         - name: workspace
           workspace: pipeline-ws
