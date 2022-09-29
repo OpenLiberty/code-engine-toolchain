@@ -26,7 +26,7 @@ spec:
       default: "{}"
     - name: cpu
       description: number of vCPU of the Code Engine application
-      default: "0.5"
+      default: "0.125"
     - name: max-scale
       description: maximum scale of the Code Engine application
       default: "10"
@@ -35,7 +35,7 @@ spec:
       default: "1"
     - name: memory
       description: total memory of the Code Engine application
-      default: "1G"
+      default: "0.25G"
     - name: ephemeral-storage
       description: Ephemeral storage
       default: "0.4G"
