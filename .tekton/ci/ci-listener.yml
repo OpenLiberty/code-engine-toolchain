@@ -73,6 +73,9 @@ spec:
     - name: memory
       description: total memory of the Code Engine application
       default: "0.25G"
+    - name: message
+      description: text for Slack message
+      default: "Slack message was not provided by pipeline."
     - name: min-scale
       description: minimum scale of the Code Engine application
       default: "1"
