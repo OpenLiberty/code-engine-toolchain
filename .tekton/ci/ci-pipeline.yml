@@ -78,6 +78,9 @@ spec:
     - name: min-scale
       description: minimum scale of the Code Engine application
       default: "1"
+    - name: max-scale
+      description: maximum scale of the Code Engine application
+      default: "2"
   workspaces:
     - name: pipeline-ws
   tasks:
