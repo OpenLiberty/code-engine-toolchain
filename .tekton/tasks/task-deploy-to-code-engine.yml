@@ -29,7 +29,7 @@ spec:
       default: "0.125"
     - name: max-scale
       description: maximum scale of the Code Engine application
-      default: "10"
+      default: "2"
     - name: min-scale
       description: minimum scale of the Code Engine application
       default: "1"
